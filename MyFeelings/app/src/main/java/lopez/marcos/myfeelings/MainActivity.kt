@@ -3,6 +3,8 @@ package lopez.marcos.myfeelings
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -37,6 +39,67 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val graphVH:View = findViewById(R.id.graphVeryHappy)
+        val graphH: View = findViewById(R.id.graphHappy)
+        val graphN: View = findViewById(R.id.graphNeutral)
+        val graphS: View = findViewById(R.id.graphSad)
+        val graphVS: View = findViewById(R.id.graphVerySad)
+        val graph:ConstraintLayout = findViewById(R.id.graph)
+
+        val guardarButton: Button = findViewById(R.id.guardarButton)
+        val veryHappyButton: ImageButton = findViewById(R.id.veryHappyButton)
+        val happyButton: ImageButton = findViewById(R.id.happyButton)
+        val neutralButton: ImageButton = findViewById(R.id.neutralButton)
+        val sadButton: ImageButton = findViewById(R.id.sadButton)
+        val verySadButton: ImageButton = findViewById(R.id.verySadButton)
+
+        jsonFile = JSONFile()
+        fetchingData()
+
+        if(!data) {
+            var emociones = ArrayList<Emociones>()
+            val fondo = CustomCircleDrawable(this, emociones)
+            graph.background = fondo
+            graphVH.background = CustomBarDrawable(this, Emociones ("Muy feliz", 0.0F, R.color.mustard, veryhappy))
+            graphH.background = CustomBarDrawable( this, Emociones ( "Feliz",  0.0F, R.color.orange, happy))
+            graphN.background = CustomBarDrawable( this, Emociones ( "Neutral", 0.0F, R.color.greenie, neutral))
+            graphS.background = CustomBarDrawable(this, Emociones ("Triste", 0.0F, R.color.blue, sad))
+            graphVS.background = CustomBarDrawable( this, Emociones ("Muy triste", 0.0F, R.color.deepblue, verysad))
+        } else{
+            actualizarGrafica()
+            iconoMayoria()
+        }
+
+        guardarButton.setOnClickListener {
+            guardar()
+        }
+        veryHappyButton.setOnClickListener {
+            veryhappy++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        happyButton.setOnClickListener {
+            happy++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+
+        neutralButton.setOnClickListener {
+            neutral++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        sadButton.setOnClickListener {
+            sad++
+            iconoMayoria()
+            actualizarGrafica()
+        }
+        verySadButton.setOnClickListener {
+            verysad++
+            iconoMayoria()
+            actualizarGrafica()
+        }
 
     }
 
